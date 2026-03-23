@@ -1,49 +1,70 @@
 #include <iostream>
+#include <cmath>
 using namespace std;
-/** 
-* @brief вычисляет путь, пройденный лодкой по течению 
-* @param river_speed - cкорость течения реки
-* @param boat_speed - cкорость лодки
-* @param time - время пути
-* @return - путь, пройденный лодкой
-*/
-double calculateL (const double river_speed, const double boat_speed, const double t){
-    return (river_speed + boat_speed) * t;
+
+/**
+ * @brief - подсчитывает количество отрицательных чисел
+ * @param a - первое число
+ * @param b - второе число
+ * @param c - третье число
+ * @return - количество отрицательных чисел
+ */
+double otr(const double a, const double b, const double c);
+
+/**
+ * @brief - вычисляет сумму трех чисел
+ * @param a - первое число
+ * @param b - второе число
+ * @param c - третье число
+ * @return - сумма чисел
+ */
+double sum(const double a, const double b, const double c);
+
+
+/**
+ * @brief - точка входа в программу
+ * @return 0, если программа выполнена корректно
+ */
+int main(){
+    // ввод
+    double a = 0;
+    double b = 0;
+    double c = 0;
+    
+    cout << "Введите первое число: ";
+    cin >> a;
+    cout << "Введите второе число: ";
+    cin >> b;
+    cout << "Введите третье число: ";
+    cin >> c;
+
+    // вычисления
+    double K = otr(a, b, c);
+    double S = sum(a, b, c);
+
+    // вывод
+    cout << "Количество отрицательных чисел: " << K << endl;
+    cout << "Сумма чисел: " << S << endl;
+    
+
+    return 0;
+    
+}
+double sum(const double a, const double b, const double c){
+    return a+b+c;
 }
 
-/** 
-* @brief - точка входа в программу
-* @return - 0, если программа выполнена корректно
-*/
-int main(){
-    // скорость реки
-    double river_speed = 0;
-    // скорость лодки
-    double boat_speed = 0;
-    // время пути
-    double t = 0;
-    
-    //вводим
-    cout << "Введите скорость реки: ";
-    cin >> river_speed;
-    cout << "Введите скорость лодки: ";
-    cin >> boat_speed;
-    cout << "Введите время пути: ";
-    cin >> t;
-    
-    //выводим
-    cout << "Скорость реки: " << river_speed << endl;
-    cout << "Скорость лодки: " << boat_speed << endl;
-    cout << "Время пути: " << t << endl;
-    
-    //путь
-    
-    //формула: (river_speed + boat_speed) * t
-    
-    double L = calculateL (river_speed, boat_speed, t);
-    
-    //результат
-    
-    cout << "Путь: " << L << endl;
-    
+double otr(const double a, const double b, const double c){
+    double k=0;
+    if (a < 0){
+        k=k+1;
+    }
+    if (b < 0){
+        k=k+1;
+    }
+    if (c < 0){
+        k=k+1;
+    }
+    return k;
+
 }
