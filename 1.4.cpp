@@ -3,7 +3,7 @@ using namespace std;
 
 
 double otr(const double a, const double b, const double c){
-    double k=0;
+    int k=0;
     if (a < 0){
         k=k+1;
     }
