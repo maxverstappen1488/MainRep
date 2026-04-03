@@ -12,7 +12,7 @@ using namespace std;
  * - если x < 0.5: y = π/2 + x·a - e^(a·x), где a = 1.36
  * - если x ≥ 0.5: y = x³·a + 28
  */
-double sys(double x);
+double sys(const double x);
 
 /**
  * @brief - точка входа в программу
@@ -26,7 +26,7 @@ int main() {
     setlocale(LC_ALL, "RU");
 
     // ввод
-    double x;
+    double x = 0;
     cout << "Введите значение x: ";
     cin >> x;
 
@@ -41,7 +41,7 @@ int main() {
 
 double sys(double x) {
     double a = 1.36;
-    double y;
+    double y = 0;
     if (x < 0.5) {
         y = M_PI / 2 + x * a - exp(a * x);
     }
