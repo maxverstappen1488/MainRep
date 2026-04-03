@@ -10,7 +10,7 @@ using namespace std;
  *
  * @warning Область определения: x ≤ 1 (для корня) и x ≠ π/2 + π·n (для тангенса)
  */
-double f(double x);
+double f(const double x);
 
 /**
  * @brief - точка входа в программу
@@ -25,7 +25,7 @@ double f(double x);
 int main()
 {
     // ввод параметров табулирования
-    double begin, end, delta;
+    double begin=0, end=0, delta=0;
     cout << "Input begin of range: ";
     cin >> begin;
     cout << "Input end of range: ";
@@ -34,7 +34,7 @@ int main()
     cin >> delta;
 
     // табулирование функции на заданном отрезке
-    for (double x = begin; x <= end; x += delta) {
+    for (double x = begin; x <= end + delta; x += delta) {
         cout << "x = " << setw(5) << x << "; y = " << f(x) << ";\n";
     }
 
