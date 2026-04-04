@@ -2,7 +2,6 @@
 #include <iostream>
 #include <cmath>
 using namespace std;
-
 /**
  * @brief - вычисляет значение кусочно-заданной функции y(x)
  * @param x - входное значение аргумента
@@ -13,7 +12,6 @@ using namespace std;
  * - если x ≥ 0.5: y = x³·a + 28
  */
 double sys(const double x);
-
 /**
  * @brief - точка входа в программу
  * @return 0, если программа выполнена корректно
@@ -24,21 +22,16 @@ double sys(const double x);
 int main() {
     // настройка локали для поддержки русского языка
     setlocale(LC_ALL, "RU");
-
     // ввод
     double x = 0;
     cout << "Введите значение x: ";
     cin >> x;
-
     // вычисление
     double y = sys(x);
-
     // вывод результата
     cout << "y = " << y << endl;
-
     return 0;
 }
-
 double sys(double x) {
     double a = 1.36;
     double y = 0;
