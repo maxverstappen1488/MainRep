@@ -9,7 +9,7 @@ using namespace std;
  *
  * @details Рекурсивная реализация: 0! = 1, n! = (n-1)! · n
  */
-int fact(int num);
+int fact(const int num);
 
 /**
  * @brief - вычисляет сумму членов последовательности от k до n
@@ -84,7 +84,7 @@ int main() {
  * @param num - неотрицательное целое число
  * @return - факториал числа (num!)
  */
-int fact(int num) {
+int fact(const int num) {
     if (num == 0) {
         return 1;
     }
