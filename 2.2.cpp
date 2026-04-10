@@ -32,7 +32,7 @@ int main() {
     cout << "y = " << y << endl;
     return 0;
 }
-double sys(double x) {
+double sys(const double x) {
     double a = 1.36;
     double y = 0;
     if (x < 0.5) {
