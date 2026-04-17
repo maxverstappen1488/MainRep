@@ -1,135 +1,100 @@
 #include <iostream>
 #include <cmath>
+#include <iomanip> // для setprecision
 using namespace std;
 
 /**
- * @brief - вычисляет факториал числа рекурсивным способом
- * @param num - неотрицательное целое число
- * @return - факториал числа (num!)
+ * @brief - вычисляет k-й член последовательности через константу
+ * @param k - индекс члена последовательности
+ * @return - значение члена: (-1)^k · (1+k) / k!
  *
- * @details Рекурсивная реализация: 0! = 1, n! = (n-1)! · n
+ * @details Использует рекуррентное соотношение:
+ * f(0) = 1
+ * f(k) = f(k-1) * (-(k+1) / (k*k)) для k >= 1
  */
-int fact(const int num);
+double function(int k);
 
 /**
  * @brief - вычисляет сумму членов последовательности от k до n
  * @param k - начальный индекс
  * @param n - конечный индекс
  * @return - сумма членов последовательности
- *
- * @details Суммирует значения function(i) для i от k до n включительно.
- * В процессе вычисления выводит каждый член последовательности.
  */
 double calculate(int k, int n);
 
 /**
- * @brief - вычисляет сумму членов последовательности, пока они >= e
+ * @brief - вычисляет сумму членов последовательности, пока |член| >= e
  * @param k - начальный индекс
  * @param e - пороговое значение (точность)
  * @return - сумма членов, удовлетворяющих условию
- *
- * @details Суммирует члены последовательности, начиная с индекса k,
- * пока абсолютное значение члена не станет меньше e.
  */
 double calculate_e(int k, double e);
 
-/**
- * @brief - вычисляет k-й член последовательности
- * @param k - индекс члена последовательности
- * @return - значение члена: (-1)^k · (1+k) / k!
- *
- * @details Формула общего члена:
- * \f$ a_k = (-1)^k \cdot \frac{1+k}{k!} \f$
- */
-double function(int k);
-
-/**
- * @brief - точка входа в программу
- * @return 0, если программа выполнена корректно
- *
- * @details Программа решает две задачи:
- * - пункт а: вычисляет сумму членов последовательности от 0 до n
- * - пункт б: вычисляет сумму членов, пока они не станут меньше e
- *
- * Пользователь вводит n (верхняя граница суммы) и e (точность).
- * Результаты выводятся с пояснениями.
- */
 int main() {
-    // настройка локали для поддержки русского языка
     setlocale(0, "RU");
 
-    int k = 0;  // стартовый индекс последовательности
-    int n;      // верхняя граница для пункта а
-    double e;   // точность для пункта б
+    int k_start = 0;  // стартовый индекс последовательности
+    int n;            // верхняя граница для пункта а
+    double e;         // точность для пункта б
 
-    // ввод параметров
     cout << "Введите n: " << endl;
     cin >> n;
     cout << "Введите e: " << endl;
     cin >> e;
 
-    // вычисления
-    double a = calculate(k, n);        // пункт а: сумма до n
-    double b = calculate_e(k, e);      // пункт б: сумма по точности
+    double a = calculate(k_start, n);        // пункт а: сумма до n
+    double b = calculate_e(k_start, e);      // пункт б: сумма по точности
 
-    // вывод результатов
-    cout << "Ответ на пункт а: " << a << endl;
+    cout << fixed << setprecision(10); // установим точность вывода
+    cout << "\nОтвет на пункт а: " << a << endl;
     cout << "Ответ на пункт б: " << b << endl;
 
     return 0;
 }
 
 /**
- * @brief - вычисляет факториал числа рекурсивным способом
- * @param num - неотрицательное целое число
- * @return - факториал числа (num!)
+ * @brief - вычисляет k-й член последовательности через рекуррентное соотношение
  */
-int fact(const int num) {
-    if (num == 0) {
-        return 1;
+double function(int k) {
+    if (k == 0) {
+        return 1.0;
     }
-    return fact(num - 1) * num;
+
+    double prev = 1.0; //начинаем с f(0)
+    for (int i = 1; i <= k; ++i) {
+        prev = prev * (-(static_cast<double>(i + 1)) / (static_cast<double>(i) * i));
+    }
+    return prev;
 }
 
 /**
  * @brief - вычисляет сумму членов последовательности от k до n
- * @param k - начальный индекс
- * @param n - конечный индекс
- * @return - сумма членов последовательности
  */
-double calculate(int k, int n) { // пункт a
+double calculate(int k, int n) {
     double sum = 0;
     double member;
     for (int i = k; i <= n; i++) {
         member = function(i);
-        cout << member << " ";  // вывод текущего члена
         sum += member;
     }
     return sum;
 }
 
 /**
- * @brief - вычисляет k-й член последовательности
- * @param k - индекс члена последовательности
- * @return - значение члена: (-1)^k · (1+k) / k!
+ * @brief - вычисляет сумму членов последовательности, пока |член| >= e
  */
-double function(int k) { // расчёт функции
-    return pow(-1, k) * double(1 + k) / fact(k);
-}
-
-/**
- * @brief - вычисляет сумму членов последовательности, пока они >= e
- * @param k - начальный индекс
- * @param e - пороговое значение (точность)
- * @return - сумма членов, удовлетворяющих условию
- */
-double calculate_e(int k, double e) { // функция для расчёта пункта б
+double calculate_e(int k, double e) {
     double sum = 0;
     double member;
-    while ((member = function(k)) >= e) {
-        cout << member << " ";  // вывод текущего члена
+    int current_k = k;
+
+    // Вычисляем первый член
+    member = function(current_k);
+
+    while (fabs(member) >= e) {
         sum += member;
-        k++;
+        current_k++;
+        member = function(current_k); // вычисляем следующий член
     }
     return sum;
 }
