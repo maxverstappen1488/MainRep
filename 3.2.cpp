@@ -28,14 +28,14 @@ double calculate(int k, int n);
  * @param e - пороговое значение (точность)
  * @return - сумма членов, удовлетворяющих условию
  */
-double calculate_e(int k, double e);
+double calculate_e(double e);
 
 int main() {
     setlocale(0, "RU");
 
     int k_start = 0;  // стартовый индекс последовательности
-    int n;            // верхняя граница для пункта а
-    double e;         // точность для пункта б
+    int n{};            // верхняя граница для пункта а
+    double e{};         // точность для пункта б
 
     cout << "Введите n: " << endl;
     cin >> n;
@@ -43,7 +43,7 @@ int main() {
     cin >> e;
 
     double a = calculate(k_start, n);        // пункт а: сумма до n
-    double b = calculate_e(k_start, e);      // пункт б: сумма по точности
+    double b = calculate_e(e);      // пункт б: сумма по точности
 
     cout << fixed << setprecision(10); // установим точность вывода
     cout << "\nОтвет на пункт а: " << a << endl;
@@ -83,10 +83,10 @@ double calculate(int k, int n) {
 /**
  * @brief - вычисляет сумму членов последовательности, пока |член| >= e
  */
-double calculate_e(int k, double e) {
+double calculate_e(double e) {
     double sum = 0;
     double member;
-    int current_k = k;
+    int current_k = 0;
 
     // Вычисляем первый член
     member = function(current_k);
