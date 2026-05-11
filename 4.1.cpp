@@ -12,8 +12,7 @@ using namespace std;
  * @details Проходит по массиву от 0 до size-1 и выводит каждый элемент,
  * разделяя их пробелом. Не добавляет перевод строки в конце.
  */
-void print_mass(int* mass, int size);
-
+void print_mass(const int* mass, const size_t size);
 /**
  * @brief - заполняет массив случайными числами в диапазоне [-100; 100]
  * @param mass - указатель на первый элемент массива
@@ -24,7 +23,7 @@ void print_mass(int* mass, int size);
  * Также сразу выводит сгенерированные числа на экран.
  * Требуется предварительный вызов srand() в main().
  */
-void random_massive(int* mass, int size);
+void random_massive(int* mass, const size_t size);
 
 /**
  * @brief - заполняет массив числами, введенными пользователем вручную
@@ -34,7 +33,7 @@ void random_massive(int* mass, int size);
  * @details Запрашивает ввод каждого элемента по очереди с подсказкой индекса.
  * После ввода сразу вызывает print_mass() для отображения результата.
  */
-void manual_massive(int* mass, int size);
+void manual_massive(int* mass, const size_t size);
 
 /**
  * @brief - вычисляет сумму всех однозначных чисел в массиве
@@ -45,7 +44,7 @@ void manual_massive(int* mass, int size);
  * @details Учитываются числа от -9 до 9 включительно.
  * Проверка осуществляется через abs(mass[i]) < 10.
  */
-int one_digit_sum(int* mass, int size);
+int one_digit_sum(const int* mass, const size_t size);
 
 /**
  * @brief - разворачивает массив в обратном порядке
@@ -56,7 +55,7 @@ int one_digit_sum(int* mass, int size);
  * первый с последним, второй с предпоследним и т.д.
  * Цикл выполняется до size / 2. Используется функция swap().
  */
-void reverse_mass(int* mass, int size);
+void reverse_mass(int* mass, const size_t size);
 
 /**
  * @brief - находит минимальный и максимальный элементы, затем разворачивает
@@ -70,7 +69,7 @@ void reverse_mass(int* mass, int size);
  *             (start + 1) и имеющего длину (end - start - 1).
  *          Если min и max соседние или совпадают, подмассив будет пустым.
  */
-void minmax_reverse_swap(int* mass, int size);
+void minmax_reverse_swap(int* mass, const size_t size);
 
 /**
  * @brief - ищет первую справа пару соседних элементов с одинаковыми знаками,
@@ -89,7 +88,7 @@ void minmax_reverse_swap(int* mass, int size);
  * Если пара не найдена, поведение функции не определено (возврат мусора).
  * Рекомендуется добавить 'return -1;' в конец функции.
  */
-int search_pair(int* mass, int size, int number);
+int search_pair(const int* mass, const size_t size, const int number);
 
 /**
  * @brief - точка входа в программу
@@ -116,11 +115,15 @@ int main()
     // инициализация генератора случайных чисел текущим временем
     srand(time(0)); // генерация псевдослучайных чисел через время на ПК
 
-    int n, input;
+    int n{}, input{};//иничиализированы значением по умолчанию(0)
 
     // ввод размера массива
     cout << "Введите размер массива: ";
     cin >> n;
+    while(n<=0){
+        cout<<"Размер массива должен быть больше нуля. Введите положительный размер.";
+        cin>>n;
+    }
 
     // выбор способа заполнения
     cout << "1-Случайная генерация чисел\n2-Ручной ввод чисел\n";
@@ -128,6 +131,11 @@ int main()
 
     // создание динамического массива
     int* mass = new int[n];
+    
+    if(mass==nullptr){
+        cout << "Не удалось выделить память для динамического массива";
+        return 0;
+    }
 
     // заполнение массива в зависимости от выбора
     switch (input) {
@@ -171,13 +179,13 @@ int main()
 
 // --- Реализация функций ---
 
-void print_mass(int* mass, int size) {
+void print_mass(const int* mass, const size_t size) {
     for (int i = 0; i < size; i++) {
         cout << mass[i] << ' ';
     }
 }
 
-void random_massive(int* mass, int size) {
+void random_massive(int* mass, const size_t size) {
     for (int i = 0; i < size; i++) {
         // Генерация числа в диапазоне [-100, 100]
         mass[i] = rand() % 201 - 100;
@@ -185,7 +193,7 @@ void random_massive(int* mass, int size) {
     }
 }
 
-void manual_massive(int* mass, int size) {
+void manual_massive(int* mass, const size_t size) {
     for (int i = 0; i < size; i++) {
         cout << "Введите " << i << " элемент массива: ";
         cin >> mass[i];
@@ -193,7 +201,7 @@ void manual_massive(int* mass, int size) {
     print_mass(mass, size);
 }
 
-int one_digit_sum(int* mass, int size) {
+int one_digit_sum(const int* mass, const size_t size) {
     int sum = 0;
     for (int i = 0; i < size; i++) {
         // Проверка: является ли число однозначным (-9..9)
@@ -204,14 +212,14 @@ int one_digit_sum(int* mass, int size) {
     return sum;
 }
 
-void reverse_mass(int* mass, int size) {
+void reverse_mass(int* mass, const size_t size) {
     // Обмен элементов симметрично от краев к центру
     for (int i = 0; i < size / 2; i++) {
         swap(mass[i], mass[size - 1 - i]);
     }
 }
 
-void minmax_reverse_swap(int* mass, int size) {
+void minmax_reverse_swap(int* mass, const size_t size) {
     int min = 0, max = 0;
     // Поиск индексов минимального и максимального элементов
     for (int i = 1; i < size; i++) {
@@ -229,7 +237,7 @@ void minmax_reverse_swap(int* mass, int size) {
     reverse_mass(mass + start + 1, end - start - 1);
 }
 
-int search_pair(int* mass, int size, int number) {
+int search_pair(const int* mass, const size_t size, const int number) {
     // Поиск справа налево
     for (int i = size - 2; i >= 0; i--) {
         // Пропуск пар с разными знаками
