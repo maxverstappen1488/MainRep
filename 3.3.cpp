@@ -8,7 +8,7 @@ using namespace std;
  * @param x - значение аргумента
  * @return - вычисленное значение функции
  */
-double f(double x);
+double f(const double x);
 
 /**
  * @brief - вычисляет факториал числа итеративным способом
@@ -18,7 +18,7 @@ double f(double x);
  * @details Реализация через цикл: перемножает числа от x до 2.
  * Для x=0 и x=1 возвращает 1.
  */
-int fact(int x);
+int fact(const int x);
 
 /**
  * @brief - вычисляет сумму ряда для sh(x) с заданной точностью eps
@@ -28,7 +28,7 @@ int fact(int x);
  *
  * @details Использует рекурсивную вспомогательную функцию sumf_recursed().
  */
-double sumf(double x, double eps);
+double sumf(const double x, const double eps);
 
 /**
  * @brief - рекурсивная функция для вычисления суммы ряда
@@ -42,7 +42,7 @@ double sumf(double x, double eps);
  * term_n = term_n-1 · x^2 / ((2n)·(2n+1))
  * Рекурсия останавливается, когда абсолютное значение члена становится меньше eps.
  */
-double sumf_recursed(double x, double eps, int n, double prev_term);
+double sumf_recursed(const double x, const double eps, const int n, const double prev_term);
 
 /**
  * @brief - точка входа в программу
@@ -61,9 +61,13 @@ int main()
 {
     // параметры табулирования
     const double eps = pow(20, -4);  // точность = 0.0001
-    const double a = 0.1;            // начало интервала
-    const double b = 1.0;            // конец интевала
-    const double h = 0.1;            // шаг табулирования
+    double a, b, h; //ручной ввод
+    cout<<"Введите начало интервала: ";
+    cin>>a;
+        cout<<"Введите конец интервала: ";
+    cin>>b;
+        cout<<"Введите шаг табулирования: ";
+    cin>>h;
 
     // вывод заголовка таблицы
     cout << "-------------------------------------------\n";
@@ -73,7 +77,7 @@ int main()
     cout << "-------------------------------------------\n";
 
     // основной цикл табулирования
-    for (double x = a; x <= b; x += h) {
+    for (double x = a; x <= b+h/2; x += h) {// +h/2 учёт погрешности double (для очень маленьких h)
         cout << "|" << setw(13) << x << "|"
             << setw(13) << f(x) << "|"
             << setw(13) << sumf(x, eps) << "|\n";
@@ -89,7 +93,7 @@ int main()
  * @param x - значение аргумента
  * @return - вычисленное значение функции
  */
-double f(double x) {
+double f(const double x) {
     return (exp(x) - exp(-x)) / 2.0;
 }
 
@@ -98,7 +102,7 @@ double f(double x) {
  * @param x - неотрицательное целое число
  * @return - факториал числа (x!)
  */
-int fact(int x) {
+int fact(const int x) {
     int sum = 1;
     for (int i = x; i >= 2; i--) {
         sum *= i;
@@ -114,7 +118,7 @@ int fact(int x) {
  * @param prev_term - значение предыдущего члена ряда
  * @return - сумма текущего и последующих членов ряда
  */
-double sumf_recursed(double x, double eps, int n, double prev_term) {
+double sumf_recursed(const double x, const double eps, const int n, const double prev_term) {
     // Рекуррентная формула: 
     // termₙ = term₋₁ * x² / ((2n)*(2n+1))
     // Для n=0 первый член равен x
@@ -135,7 +139,7 @@ double sumf_recursed(double x, double eps, int n, double prev_term) {
  * @param eps - точность вычисления
  * @return - приближённое значение суммы ряда
  */
-double sumf(double x, double eps) {
+double sumf(const double x, const double eps) {
     // Запуск рекурсии с начальными параметрами: n=0, prev_term=0
     return sumf_recursed(x, eps, 0, 0);
 }
