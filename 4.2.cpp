@@ -52,6 +52,8 @@ int main()
     print_mass(mass, n);
     k(&mass, &n, -10);
     print_mass(mass, n);
+    delete[] mass;
+    return 0;
 }
 
 // --- Реализация функций ---
