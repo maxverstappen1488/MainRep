@@ -102,8 +102,8 @@ double f(const double x) {
  * @param x - неотрицательное целое число
  * @return - факториал числа (x!)
  */
-int fact(const int x) {
-    int sum = 1;
+size_t fact(const int x) {
+    size_t sum = 1;
     for (int i = x; i >= 2; i--) {
         sum *= i;
     }
