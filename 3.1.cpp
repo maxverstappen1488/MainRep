@@ -34,7 +34,7 @@ int main()
     cin >> delta;
 
     // табулирование функции на заданном отрезке
-    for (double x = begin; x <= end + delta; x += delta) {
+    for (double x = begin; x < end + delta; x += delta) {
         cout << "x = " << setw(5) << x << "; y = " << f(x) << ";\n";
     }
 
