@@ -4,15 +4,15 @@
 #include <ctime>
 using namespace std;
 
-void print_mass(const int* mass, const int size);
+void print_mass(const int* mass, const size_t size);
 
-void random_massive(int* mass, const int size);
+void random_massive(int* mass, const size_t size);
 
-void manual_massive(int* mass, const int size);
+void manual_massive(int* mass, const size_t size);
 
-void last_elem(const int* mass, const int size);
+void last_elem(int* mass, const size_t size);
 
-void k(const int** pointer_mass, const int* size, const int K);
+void k(int** pointer_mass, size_t* pointer_size, const int K);
 
 int main()
 {
@@ -22,15 +22,22 @@ int main()
     // инициализация генератора случайных чисел текущим временем
     srand(time(0)); // генерация псевдослучайных чисел через время на ПК
 
-    int n, input;
+    size_t n;
+    int input;
 
     // ввод размера массива
     cout << "Введите размер массива: ";
-    cin >> n;
+    if (!(cin >> n) || n == 0) {
+        cerr << "Ошибка: введите целое число > 0" << endl;
+        return 0;
+    }
 
     // выбор способа заполнения
     cout << "1-Случайная генерация чисел\n2-Ручной ввод чисел\n";
-    cin >> input;
+    if (!(cin >> input) || (input != 1 && input != 2)) {
+        cerr << "Ошибка: выберите 1 или 2" << endl;
+        return 0;
+    }
 
     // создание динамического массива
     int* mass = new int[n];
@@ -45,6 +52,7 @@ int main()
         break;
     default:
         cout << "Ошибка ввода";
+        return 0;
         // В случае ошибки ввода массив остается неинициализированным
     }
     print_mass(mass, n);
@@ -58,31 +66,29 @@ int main()
 
 // --- Реализация функций ---
 
-void print_mass(const int* mass, const int size) {
-    for (int i = 0; i < size; i++) {
+void print_mass(const int* mass, const size_t size) {
+    for (size_t i = 0; i < size; i++) {
         cout << mass[i] << ' ';
     }
     cout << '\n';
 }
 
-void random_massive(int* mass, const int size) {
-    for (int i = 0; i < size; i++) {
+void random_massive(int* mass, const size_t size) {
+    for (size_t i = 0; i < size; i++) {
         // Генерация числа в диапазоне [-100, 100]
         mass[i] = rand() % 201 - 100;
-        cout << mass[i] << ' ';
     }
 }
 
-void manual_massive(int* mass, const int size) {
-    for (int i = 0; i < size; i++) {
+void manual_massive(int* mass, const size_t size) {
+    for (size_t i = 0; i < size; i++) {
         cout << "Введите " << i << " элемент массива: ";
         cin >> mass[i];
     }
-    print_mass(mass, size);
 }
 
-void last_elem(const int* mass, const int size) {
-    for (int i = size - 1; i >= 0; i--) {
+void last_elem(int* mass, const size_t size) {
+    for (size_t i = size; i-- > 0;) {
         if (mass[i] % 3 == 0) {
             mass[i] = 0;
             break;
@@ -90,23 +96,26 @@ void last_elem(const int* mass, const int size) {
     }
 }
 
-void k(const int** pointer_mass, const int* size, const int K) {
-    int size = *pointer_size;
+void k(int** pointer_mass, size_t* pointer_size, const int K) {
+    size_t size = *pointer_size;
     int* mass = *pointer_mass;
     int* k_mass = new int[size + 1];
-    int index = -1;
-    for (int i = size - 1; i >= 0; i--) {
+    size_t index = size;
+    for (size_t i = size; i-- > 0;) {
         if (mass[i] % 2 == 0) {
             index = i;
             break;
         }
     }
-    if (index == -1) return;
-    for (int i = 0; i <= index; i++) {
+    if (index == size) {
+        delete[]k_mass;//чтобы не было утечки
+        return;
+    }
+    for (size_t i = 0; i <= index; i++) {
         k_mass[i] = mass[i];
     }
     k_mass[index + 1] = K;
-    for (int i = index + 1; i < size; i++) {
+    for (size_t i = index + 1; i < size; i++) {
         k_mass[i + 1] = mass[i];
     }
     delete[] mass;
