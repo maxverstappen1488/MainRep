@@ -29,7 +29,7 @@ double check();
  * - вертикальное: дома стоят друг над другом по высоте (h1 + h2 <= b),
  *   ширина ограничена максимальным из w1, w2
  */
-double willBuild(double a, double b, double p, double q, double r, double s);
+double willBuild(const double a, const double b, const double p, const double q, const double r, const double s);
 
 /**
  * @brief - точка входа в программу
@@ -85,7 +85,7 @@ double check() {
     return result;
 }
 
-double willBuild(double a, double b, double p, double q, double r, double s) {
+double willBuild(const double a, const double b, const double p, const double q, const double r, const double s) {
     bool possible = false;
     // Перебор всех 4 комбинаций ориентаций
     for (int i = 0; i < 2; ++i) {
