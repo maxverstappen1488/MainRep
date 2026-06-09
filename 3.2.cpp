@@ -2,46 +2,40 @@
 #include <cmath>
 #include <iomanip> // для setprecision
 using namespace std;
-
-
+#define MAX_ITERATIONS 1000000
 /**
  * @brief Вычисляет сумму первых n членов последовательности (k = 0..n)
  * @param n Индекс последнего члена (n >= 0)
  * @return Сумма a_0 + a_1 + ... + a_n
  */
-double calculate(int n);
+double calculate(const int n);
 
 /**
  * @brief Вычисляет сумму членов последовательности, пока |член| >= e
  * @param e Точность (e > 0)
  * @return Сумма членов, модуль которых не меньше e
  */
-double calculate_e(double e);
+double calculate_e(const double e);
 
 int main() {
     setlocale(0, "RU");
-
     int n{};            // верхняя граница для пункта а
     double e{};         // точность для пункта б
 
     // Ввод n с проверкой
-    cout << "Введите n (количество членов, n >= 1): ";
+    cout << "Введите n (верхний индекс суммы, n >= 1): ";
     cin >> n;
-    while (cin.fail() || n < 1) {
-        cin.clear();
-        cin.ignore(1000, '\n');
+    if (cin.fail() || n < 1) {
         cout << "Ошибка! Введите целое положительное число: ";
-        cin >> n;
+        return 0;
     }
 
     // Ввод e с проверкой
-    cout << "Введите e (точность, 1 < e > 0): ";
+    cout << "Введите e (точность, 0 < e < 1): ";
     cin >> e;
-    while (cin.fail() || e <= 0.0||e>=1) {
-        cin.clear();
-        cin.ignore(1000, '\n');
+    if (cin.fail() || e <= 0.0 || e >= 1) {
         cout << "Ошибка! Введите положительное число: ";
-        cin >> e;
+        return 0;
     }
 
     double a = calculate(n);        // пункт а: сумма до индекса n
@@ -56,33 +50,33 @@ int main() {
 
 
 
-double calculate(int n) {
+double calculate(const int n) {
     double current = 1.0;   // Это a_0 (при k=0)
-    double sum = current;   // Начинаем сумму с первого члена
-
-    for (int i = 1; i <= n; ++i) {
-        // Рекуррентный переход: a_i = a_{i-1} * (-(i + 1) / i^2)
-        double di = static_cast<double>(i);
-        current *= -(di + 1.0) / (di * di);
+    double sum = current;   // Начинаем сумму с a_0, так как ряд начинается с k=0
+    // Цикл от k=1 до n. Используем size_t для счетчика.
+    for (size_t i = 1; i <= (size_t)n; ++i) {
+        // Рекуррентный переход для ряда (-1)^i / (2i)!
+        // a_i = a_{i-1} * (-1) / (2i * (2i - 1))
+        double di = (double)(i);
+        current *= -1.0 / (2.0 * di * (2.0 * di - 1.0));
         sum += current;
     }
     return sum;
 }
 
 
-double calculate_e(double e) {
+double calculate_e(const double e) {
     double sum = 0.0;
     double current = 1.0;   // Начинаем с a_0 = 1.0
-    int i = 0;
-
-    while (abs(current) >= e) {
-        sum += current;
+    size_t i = 0;
+    do {
+        sum += current; // Добавляем текущий член (сначала a_0, потом a_1 и т.д.)
         i++;
-        double di = static_cast<double>(i);
-        current *= -(di + 1.0) / (di * di);
+        double di = (double)(i);
+        // Вычисляем следующий член ряда, чтобы проверить его в условии while
+        current *= -1.0 / (2.0 * di * (2.0 * di - 1.0));
+        // Цикл продолжается, пока следующий член >= e и мы не превысили лимит итераций
+    } while (abs(current) >= e && i <= MAX_ITERATIONS);
 
-        if (i > 1000000) break;
-    }
     return sum;
 }
-
