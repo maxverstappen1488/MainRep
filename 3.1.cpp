@@ -41,6 +41,6 @@ int main()
     return 0;
 }
 
-double f(double x) {
+double f(const double x) {
     return sqrt(1 - x) - tan(x);
 }
