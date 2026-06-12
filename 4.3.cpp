@@ -2,6 +2,8 @@
 #include <iomanip>
 using namespace std;
 
+enum filling_method { random = 1, manual };
+
 void random_massive(int** mass, const size_t n, const size_t m);
 void manual_massive(int** mass, const size_t n, const size_t m);
 void print_massive(const int* const* mass, const size_t n, const size_t m);
@@ -11,7 +13,7 @@ void insertion(int**& mass, const size_t n, size_t& m);
 
 int main()
 {
-    setlocale(LC_ALL, "ru_RU.UTF-8");
+    setlocale(LC_ALL, "RU");
     size_t n, m;
     int input;
     cout << "Введите количество строк: ";
@@ -29,10 +31,10 @@ int main()
 
     // заполнение массива в зависимости от выбора
     switch (input) {
-    case 1:
+    case random:
         random_massive(matrix, n, m);
         break;
-    case 2:
+    case manual:
         manual_massive(matrix, n, m);
         break;
     default:
@@ -53,7 +55,10 @@ int main()
     delete[] matrix;
 }
 
+
 void random_massive(int** mass, const size_t n, const size_t m) {
+    if (mass == nullptr) //проверка, что не пустой указатель
+        return;
     for (size_t i = 0; i < n; i++) {
         for (size_t j = 0; j < m; j++) {
             mass[i][j] = rand() % 90 + 10;
@@ -61,7 +66,10 @@ void random_massive(int** mass, const size_t n, const size_t m) {
     }
 }
 
+
 void manual_massive(int** mass, const size_t n, const size_t m) {
+    if (mass == nullptr)//проверка, что не пустой указатель
+        return;
     for (size_t i = 0; i < n; i++) {
         for (size_t j = 0; j < m; j++) {
             cout << "Введите значение для элемента " << i << " строки " << j << " столбца: ";
@@ -70,8 +78,15 @@ void manual_massive(int** mass, const size_t n, const size_t m) {
     }
 }
 
+void random_massive(int** mass, const size_t n, const size_t m);
+void manual_massive(int** mass, const size_t n, const size_t m);
+void print_massive(const int* const* mass, const size_t n, const size_t m);
+void replacement(int** mass, const size_t n, const size_t m);
+void insertion(int**& mass, const size_t n, size_t& m);
 void print_massive(const int* const* mass, const size_t n, const size_t m)
 {
+    if (mass == nullptr)//проверка, что не пустой указатель
+        return;
     for (size_t i = 0; i < n; i++) {
         for (size_t j = 0; j < m; j++) {
             cout << setw(2) << mass[i][j] << ' ';
@@ -83,6 +98,8 @@ void print_massive(const int* const* mass, const size_t n, const size_t m)
 
 void replacement(int** mass, const size_t n, const size_t m)
 {
+    if (mass == nullptr)//проверка, что не пустой указатель
+        return;
     for (size_t i = 0; i < n; i++) {
         for (size_t j = 0; j < m; j++) {
             if (mass[i][j] % 2 == 1) {
@@ -95,6 +112,8 @@ void replacement(int** mass, const size_t n, const size_t m)
 
 void insertion(int**& mass, const size_t n, size_t& m)
 {
+    if (mass == nullptr)//проверка, что не пустой указатель
+        return;
     size_t index = m;
     for (size_t j = m; j-- > 0; ) {
         for (size_t i = 0; i < n; i++) {
