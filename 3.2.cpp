@@ -70,12 +70,12 @@ double calculate_e(const double e) {
     size_t i = 0;
     while (fabs(current) >= e) {
         sum += current; // Добавляем текущий член (сначала a_0, потом a_1 и т.д.)
-        i++;
         double di = (double)(i);
         // Вычисляем следующий член ряда, чтобы проверить его в условии while
         current *= -1.0 / (2.0 * di * (2.0 * di - 1.0));
         //cout << i << ' ' << current << endl;
         // Цикл продолжается, пока следующий член >= e и мы не превысили лимит итераций
+        i++;
     }
     return sum;
 }
