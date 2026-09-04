@@ -2,7 +2,6 @@
 #include <cmath>
 #include <iomanip> // для setprecision
 using namespace std;
-#define MAX_ITERATIONS 1000000
 /**
  * @brief Вычисляет сумму первых n членов последовательности (k = 0..n)
  * @param n Индекс последнего члена (n >= 0)
@@ -18,7 +17,7 @@ double calculate(const int n);
 double calculate_e(const double e);
 
 int main() {
-    setlocale(LC_ALL, "ru_RU.UTF-8");
+    setlocale(LC_ALL, "RU");
     int n{};            // верхняя граница для пункта а
     double e{};         // точность для пункта б
 
@@ -69,7 +68,7 @@ double calculate_e(const double e) {
     double sum = 0.0;
     double current = 1.0;   // Начинаем с a_0 = 1.0
     size_t i = 0;
-    while (fabs(current) >= e && i <= MAX_ITERATIONS) {
+    while (fabs(current) >= e) {
         sum += current; // Добавляем текущий член (сначала a_0, потом a_1 и т.д.)
         i++;
         double di = (double)(i);
