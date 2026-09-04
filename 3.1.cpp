@@ -1,8 +1,10 @@
 #include <iostream>
 #include <iomanip>
 #include <cmath>
+#include <limits> // Подключение библиотеку для numeric_limits
+
 using namespace std;
-const double eps = 1e-9;
+
 /**
  * @brief - вычисляет значение функции f(x) = √(1-x) - tan(x)
  * @param x - значение аргумента
@@ -54,12 +56,16 @@ int main()
 
     cout << fixed << setprecision(4);
 
+    // Получаем встроенное значение машинного эпсилон для удобства чтения кода
+    const double eps = numeric_limits<double>::epsilon();
+
     // табулирование функции на заданном отрезке
     for (int i = 0; i <= n; ++i) {
         double x = begin + i * delta;
 
         cout << "x = " << setw(8) << x << "; y = ";
-        if (x > 1 + eps || fabs(cos(x)) < eps) { //ООФ
+        // ООФ: x > 1 (с учетом машинной погрешности) или cos(x) ≈ 0 (тангенс не определен)
+        if (x > 1 + eps || fabs(cos(x)) < eps) { 
             cout << "Outside the domain of the function";
         }
         else {
