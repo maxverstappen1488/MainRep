@@ -4,16 +4,57 @@
 #include <ctime>
 using namespace std;
 
+/**
+ * @brief Перечисление способов создания массива
+ */
+enum create_mass{random=1, manual};
+
+/**
+ * @brief Выводит элементы массива на экран
+ * @param mass - указатель на массив
+ * @param size - размер массива
+ */
 void print_mass(const int* mass, const size_t size);
 
+/**
+ * @brief Заполняет массив случайными числами в диапазоне [-100, 100]
+ * @param mass - указатель на массив
+ * @param size - размер массива
+ */
 void random_massive(int* mass, const size_t size);
 
+/**
+ * @brief Заполняет массив числами, введёнными пользователем
+ * @param mass - указатель на массив
+ * @param size - размер массива
+ */
 void manual_massive(int* mass, const size_t size);
 
+/**
+ * @brief Находит последний элемент, делящийся на 3, и заменяет его на 0
+ * @param mass - указатель на массив
+ * @param size - размер массива
+ */
 void last_elem(int* mass, const size_t size);
 
-void k(int** pointer_mass, size_t* pointer_size, const int K);
+/**
+ * @brief Вставляет число K после первого чётного элемента массива
+ * @param pointer_mass - указатель на указатель массива (для изменения размера)
+ * @param pointer_size - ссылка на размер массива (изменяется при вставке)
+ * @param K - число для вставки
+ * @note Если чётных элементов нет, массив не изменяется
+ */
+void k(int** pointer_mass, size_t& pointer_size, const int K);
 
+/**
+ * @brief Точка входа в программу
+ * @return 0, если программа выполнена корректно
+ * 
+ * @details Программа создаёт динамический массив, заполняет его
+ * (случайными числами или вручную), находит последний элемент,
+ * делящийся на 3, и заменяет его на 0, затем вставляет число -10
+ * после первого чётного элемента.
+ */
 int main()
 {
     // настройка локали для поддержки русского языка
@@ -23,17 +64,19 @@ int main()
     srand(time(0)); // генерация псевдослучайных чисел через время на ПК
 
     size_t n;
-    int input;
+    long long input;
 
     // ввод размера массива
     cout << "Введите размер массива: ";
-    if (!(cin >> n) || n == 0) {
+    if (!(cin >> input) || input <= 0) {
         cerr << "Ошибка: введите целое число > 0" << endl;
         return 0;
     }
+    
+    n = (size_t)input;
 
     // выбор способа заполнения
-    cout << "1-Случайная генерация чисел\n2-Ручной ввод чисел\n";
+    cout << create_mass::random<<"-Случайная генерация чисел\n"<< create_mass::manual<<"-Ручной ввод чисел\n";
     if (!(cin >> input) || (input != 1 && input != 2)) {
         cerr << "Ошибка: выберите 1 или 2" << endl;
         return 0;
@@ -44,10 +87,10 @@ int main()
 
     // заполнение массива в зависимости от выбора
     switch (input) {
-    case 1:
+    case create_mass::random:
         random_massive(mass, n);
         break;
-    case 2:
+    case create_mass::manual:
         manual_massive(mass, n);
         break;
     default:
@@ -58,7 +101,7 @@ int main()
     print_mass(mass, n);
     last_elem(mass, n);
     print_mass(mass, n);
-    k(&mass, &n, -10);
+    k(&mass, n, -10);
     print_mass(mass, n);
     delete[] mass;
     return 0;
@@ -96,8 +139,8 @@ void last_elem(int* mass, const size_t size) {
     }
 }
 
-void k(int** pointer_mass, size_t* pointer_size, const int K) {
-    size_t size = *pointer_size;
+void k(int** pointer_mass, size_t& pointer_size, const int K) {
+    size_t size = pointer_size;
     int* mass = *pointer_mass;
     int* k_mass = new int[size + 1];
     size_t index = size;
@@ -119,6 +162,6 @@ void k(int** pointer_mass, size_t* pointer_size, const int K) {
         k_mass[i + 1] = mass[i];
     }
     delete[] mass;
-    *pointer_size = size + 1;
+    pointer_size = size + 1;
     *pointer_mass = k_mass;
 }
