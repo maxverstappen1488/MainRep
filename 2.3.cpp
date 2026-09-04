@@ -88,8 +88,8 @@ double check() {
 double willBuild(const double a, const double b, const double p, const double q, const double r, const double s) {
     bool possible = false;
     // Перебор всех 4 комбинаций ориентаций
-    for (int i = 0; i < 2; ++i) {
-        for (int j = 0; j < 2; ++j) {
+    for (size_t i = 0; i < 2; ++i) {
+        for (size_t j = 0; j < 2; ++j) {
             double w1 = (i == 0) ? p : q;
             double h1 = (i == 0) ? q : p;
             double w2 = (j == 0) ? r : s;
