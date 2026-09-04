@@ -2,7 +2,7 @@
 #include <iomanip>
 #include <cmath>
 using namespace std;
-
+const double eps = 1e-9;
 /**
  * @brief - вычисляет значение функции f(x) = √(1-x) - tan(x)
  * @param x - значение аргумента
@@ -25,17 +25,47 @@ double f(const double x);
 int main()
 {
     // ввод параметров табулирования
-    double begin=0, end=0, delta=0;
+    double begin = 0, end = 0, delta = 0;
     cout << "Input begin of range: ";
-    cin >> begin;
+    if (!(cin >> begin)) {
+        cout << "Ошибка ввода\n";
+        return 1;
+    }
+
     cout << "Input end of range: ";
-    cin >> end;
+    if (!(cin >> end)) {
+        cout << "Ошибка ввода\n";
+        return 1;
+    }
+
     cout << "Input the interval: ";
-    cin >> delta;
+    if (!(cin >> delta) || delta <= 0) {
+        cout << "Шаг должен быть положительным числом\n";
+        return 1;
+    }
+
+    if (begin > end) {
+        cout << "Начало отрезка не может быть больше конца\n";
+        return 1;
+    }
+
+    // количество шагов считаем целым числом, чтобы не копить погрешность
+    int n = (int)((end - begin) / delta + 0.5);
+
+    cout << fixed << setprecision(4);
 
     // табулирование функции на заданном отрезке
-    for (double x = begin; x < end + delta; x += delta) {
-        cout << "x = " << setw(5) << x << "; y = " << f(x) << ";\n";
+    for (int i = 0; i <= n; ++i) {
+        double x = begin + i * delta;
+
+        cout << "x = " << setw(8) << x << "; y = ";
+        if (x > 1 + eps || fabs(cos(x)) < eps) { //ООФ
+            cout << "Outside the domain of the function";
+        }
+        else {
+            cout << setw(8) << f(x);
+        }
+        cout << ";\n";
     }
 
     return 0;
