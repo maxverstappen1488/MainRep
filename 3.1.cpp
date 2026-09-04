@@ -60,7 +60,7 @@ int main()
     const double eps = numeric_limits<double>::epsilon();
 
     // табулирование функции на заданном отрезке
-    for (int i = 0; i <= n; ++i) {
+    for (int i = 0; i <= n + eps; ++i) {
         double x = begin + i * delta;
 
         cout << "x = " << setw(8) << x << "; y = ";
