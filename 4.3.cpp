@@ -43,7 +43,7 @@ int main()
         // освобождаем память при ошибке
         for (size_t i = 0; i < n; i++) delete[] matrix[i];
         delete[] matrix;
-        return 0;
+        return 1;
     }
     print_massive(matrix, n, m);
     replacement(matrix, n, m);
@@ -77,12 +77,6 @@ void manual_massive(int** mass, const size_t n, const size_t m) {
         }
     }
 }
-
-void random_massive(int** mass, const size_t n, const size_t m);
-void manual_massive(int** mass, const size_t n, const size_t m);
-void print_massive(const int* const* mass, const size_t n, const size_t m);
-void replacement(int** mass, const size_t n, const size_t m);
-void insertion(int**& mass, const size_t n, size_t& m);
 void print_massive(const int* const* mass, const size_t n, const size_t m)
 {
     if (mass == nullptr)//проверка, что не пустой указатель
