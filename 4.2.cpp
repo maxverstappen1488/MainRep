@@ -7,7 +7,7 @@ using namespace std;
 /**
  * @brief Перечисление способов создания массива
  */
-enum create_mass{random=1, manual};
+enum create_mass { random = 1, manual };
 
 /**
  * @brief Выводит элементы массива на экран
@@ -49,7 +49,7 @@ void k(int** pointer_mass, size_t& pointer_size, const int K);
 /**
  * @brief Точка входа в программу
  * @return 0, если программа выполнена корректно
- * 
+ *
  * @details Программа создаёт динамический массив, заполняет его
  * (случайными числами или вручную), находит последний элемент,
  * делящийся на 3, и заменяет его на 0, затем вставляет число -10
@@ -72,11 +72,11 @@ int main()
         cerr << "Ошибка: введите целое число > 0" << endl;
         return 0;
     }
-    
+
     n = (size_t)input;
 
     // выбор способа заполнения
-    cout << create_mass::random<<"-Случайная генерация чисел\n"<< create_mass::manual<<"-Ручной ввод чисел\n";
+    cout << create_mass::random << "-Случайная генерация чисел\n" << create_mass::manual << "-Ручной ввод чисел\n";
     if (!(cin >> input) || (input != 1 && input != 2)) {
         cerr << "Ошибка: выберите 1 или 2" << endl;
         return 0;
@@ -101,9 +101,29 @@ int main()
     print_mass(mass, n);
     last_elem(mass, n);
     print_mass(mass, n);
-    k(&mass, n, -10);
-    print_mass(mass, n);
+    int* k_mass = new int[n + 1];
+    size_t index = n;
+    for (size_t i = n; i-- > 0;) {
+        if (mass[i] % 2 == 0) {
+            index = i;
+            break;
+        }
+    }
+    if (index == n) {
+        delete[]k_mass;//чтобы не было утечки
+        return 0;
+    }
+    for (size_t i = 0; i <= index; i++) {
+        k_mass[i] = mass[i];
+    }
+    k_mass[index + 1] = -10;
+    for (size_t i = index + 1; i < n; i++) {
+        k_mass[i + 1] = mass[i];
+    }
     delete[] mass;
+    n++;
+    mass = k_mass;
+    print_mass(mass, n);
     return 0;
 }
 
@@ -137,31 +157,4 @@ void last_elem(int* mass, const size_t size) {
             break;
         }
     }
-}
-
-void k(int** pointer_mass, size_t& pointer_size, const int K) {
-    size_t size = pointer_size;
-    int* mass = *pointer_mass;
-    int* k_mass = new int[size + 1];
-    size_t index = size;
-    for (size_t i = size; i-- > 0;) {
-        if (mass[i] % 2 == 0) {
-            index = i;
-            break;
-        }
-    }
-    if (index == size) {
-        delete[]k_mass;//чтобы не было утечки
-        return;
-    }
-    for (size_t i = 0; i <= index; i++) {
-        k_mass[i] = mass[i];
-    }
-    k_mass[index + 1] = K;
-    for (size_t i = index + 1; i < size; i++) {
-        k_mass[i + 1] = mass[i];
-    }
-    delete[] mass;
-    pointer_size = size + 1;
-    *pointer_mass = k_mass;
 }
