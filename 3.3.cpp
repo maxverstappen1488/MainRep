@@ -60,7 +60,12 @@ double sumf_recursed(const double x, const double eps, const int n, const double
 int main()
 {
     // параметры табулирования
-    const double eps = pow(20, -4);  // точность = 0.0001
+    double eps;
+    cout << "Введите точность: ";
+    cin >> eps;
+    if (eps >= 1 or eps <= 0 ) {
+        cout << "Точность от 0 до 1";
+    }
     double a, b, h; //ручной ввод
     cout<<"Введите начало интервала: ";
     cin>>a;
