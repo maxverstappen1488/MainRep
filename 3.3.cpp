@@ -1,14 +1,18 @@
 #include <iostream>
 #include <cmath>
 #include <iomanip>
+
 using namespace std;
 
 /**
- * @brief - вычисляет значение функции гиперболического синуса: sh(x) = (e^x - e^-x) / 2
- * @param x - значение аргумента
- * @return - вычисленное значение функции
+ * @brief - вычисляет факториал числа итеративным способом
+ * @param x - неотрицательное целое число
+ * @return - факториал числа (x!)
+ *
+ * @details Реализация через цикл: перемножает числа от x до 2.
+ * Для x=0 и x=1 возвращает 1.
  */
-double f(const double x);
+size_t fact(const int x);
 
 /**
  * @brief - вычисляет сумму ряда для sh(x) с заданной точностью eps
@@ -38,28 +42,27 @@ double sumf_recursed(const double x, const double eps, const int n, const double
  * @brief - точка входа в программу
  * @return 0, если программа выполнена корректно
  *
- * @details Программа табулирует функцию sh(x) на отрезке [a; b] с шагом h.
+ * @details Программа табулирует функцию sh(x).
  * Для каждого значения x выводит:
  * - значение аргумента x
- * - точное значение функции f(x) = sh(x)
+ * - точное значение функции sinh(x)
  * - приближённое значение через сумму ряда sumf(x, eps)
- *
- * Вывод оформлен в виде таблицы с использованием setw() для выравнивания.
+ * - фактическую разность между ними
  */
 int main()
 {
-    // допуск для сравнения вещественных чисел в условии цикла (не зависит от h)
-    const double tol = 1e-9;
-
     // параметры табулирования
     double eps;
     cout << "Введите точность: ";
     cin >> eps;
+
+    // Проверка корректности ввода точности
     if (eps >= 1 || eps <= 0) {
-        cout << "Точность от 0 до 1\n";
+        cout << "Ошибка: точность должна быть в диапазоне (0; 1)." << endl;
         return 1;
     }
-    double a, b, h; //ручной ввод
+
+    double a, b, h; // ручной ввод интервала и шага
     cout << "Введите начало интервала: ";
     cin >> a;
     cout << "Введите конец интервала: ";
@@ -67,35 +70,65 @@ int main()
     cout << "Введите шаг табулирования: ";
     cin >> h;
 
-    // фиксированная точность вывода, чтобы столбцы function и sum of a row были сравнимы
-    cout << fixed << setprecision(6);
-
-    // вывод заголовка таблицы
-    cout << "-------------------------------------------\n";
+    // вывод заголовка таблицы (ширина увеличена для 4 столбцов)
+    cout << "--------------------------------------------------------------\n";
     cout << "|" << setw(13) << "argument" << "|"
-        << setw(13) << "function" << "|"
-        << setw(13) << "sum of a row" << "|\n";
-    cout << "-------------------------------------------\n";
+        << setw(13) << "sinh(x)" << "|"
+        << setw(13) << "sum of a row" << "|"
+        << setw(13) << "difference" << "|\n";
+    cout << "--------------------------------------------------------------\n";
 
     // основной цикл табулирования
-    for (double x = a; x <= b + tol; x += h) { // tol - защита от погрешности накопления double
+    for (double x = a; x <= b + h / 2; x += h) { // +h/2 учёт погрешности double
+
+        double exact_val = sinh(x);       // Точное значение (встроенная функция)
+        double approx_val = sumf(x, eps); // Наше рассчитываемое значение (ряд)
+
+        double current_eps = eps;
+
+        // Гарантируем, что разность строго меньше заданной точности eps
+        while (fabs(exact_val - approx_val) >= eps) {
+            current_eps /= 10.0; // Ужесточаем внутренний порог для ряда
+            approx_val = sumf(x, current_eps); // Пересчитываем ряд
+        }
+
+        double diff = fabs(exact_val - approx_val); // Фактическая погрешность
+
+        // Вывод строки таблицы
         cout << "|" << setw(13) << x << "|"
-            << setw(13) << f(x) << "|"
-            << setw(13) << sumf(x, eps) << "|\n";
+            << setw(13) << exact_val << "|"
+            << setw(13) << approx_val << "|"
+            << setw(13) << diff << "|\n";
     }
 
-    cout << "-------------------------------------------\n";
+    cout << "--------------------------------------------------------------\n";
 
     return 0;
 }
 
-double f(const double x) {
-    return (exp(x) - exp(-x)) / 2.0;
+/**
+ * @brief - вычисляет факториал числа итеративным способом
+ * @param x - неотрицательное целое число
+ * @return - факториал числа (x!)
+ */
+size_t fact(const int x) {
+    size_t result = 1;
+    for (int i = x; i >= 2; i--) {
+        result *= i;
+    }
+    return result;
 }
-
+/**
+ * @brief - рекурсивная функция для вычисления суммы ряда
+ * @param x - значение аргумента
+ * @param eps - точность вычисления
+ * @param n - текущий индекс члена ряда
+ * @param prev_term - значение предыдущего члена ряда
+ * @return - сумма текущего и последующих членов ряда
+ */
 double sumf_recursed(const double x, const double eps, const int n, const double prev_term) {
-    // Рекуррентная формула:
-    // termₙ = term₋₁ * x² / ((2n)*(2n+1))
+    // Рекуррентная формула: 
+    // termₙ = termₙ₋₁ * x² / ((2n)*(2n+1))
     // Для n=0 первый член равен x
     double term = (n == 0) ? x : prev_term * x * x / ((2 * n) * (2 * n + 1));
 
@@ -108,6 +141,12 @@ double sumf_recursed(const double x, const double eps, const int n, const double
     return term + sumf_recursed(x, eps, n + 1, term);
 }
 
+/**
+ * @brief - вычисляет сумму ряда Тейлора для sh(x) с заданной точностью eps
+ * @param x - значение аргумента
+ * @param eps - точность вычисления
+ * @return - приближённое значение суммы ряда
+ */
 double sumf(const double x, const double eps) {
     // Запуск рекурсии с начальными параметрами: n=0, prev_term=0
     return sumf_recursed(x, eps, 0, 0);
