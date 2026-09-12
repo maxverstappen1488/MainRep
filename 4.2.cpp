@@ -66,7 +66,7 @@ int main()
 
     // выбор способа заполнения
     cout << create_mass::random << "-Случайная генерация чисел\n" << create_mass::manual << "-Ручной ввод чисел\n";
-    if (!(cin >> input) || (input != 1 && input != 2)) {
+    if (!(cin >> input) || (input != create_mass::random && input != create_mass::manual)) {
         cerr << "Ошибка: выберите 1 или 2" << endl;
         return 0;
     }
@@ -90,29 +90,26 @@ int main()
     print_mass(mass, n);
     last_elem(mass, n);
     print_mass(mass, n);
-    int* k_mass = new int[n + 1];
-    size_t index = n;
+    size_t counter = 0;
     for (size_t i = n; i-- > 0;) {
         if (mass[i] % 2 == 0) {
-            index = i;
-            break;
+            counter++;
         }
     }
-    if (index == n) {
-        delete[]k_mass;//чтобы не было утечки
-        return 0;
+
+    int* k_mass = new int[n + counter];
+    
+    for (size_t i = 0, k = 0; i < n; i++) {
+        k_mass[k++] = mass[i];
+        if (mass[i] % 2 == 0) {
+			k_mass[k++] = -10; // вставка числа K после чётного элемента
+        }
     }
-    for (size_t i = 0; i <= index; i++) {
-        k_mass[i] = mass[i];
-    }
-    k_mass[index + 1] = -10;
-    for (size_t i = index + 1; i < n; i++) {
-        k_mass[i + 1] = mass[i];
-    }
-    delete[] mass;
+	delete[] mass; //удаляем старый массив, чтобы не было утечки памяти
     n++;
-    mass = k_mass;
+    mass = k_mass; //на место старого массива записываем адрес нового массива
     print_mass(mass, n);
+	delete[]k_mass; //удаляем новый массив, чтобы не было утечки памяти
     return 0;
 }
 
