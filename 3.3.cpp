@@ -113,7 +113,7 @@ int main()
  */
 size_t fact(const int x) {
     size_t result = 1;
-    for (int i = x; i >= 2; i--) {
+    for (size_t i = x; i >= 2; i--) {
         result *= i;
     }
     return result;
