@@ -2,31 +2,78 @@
 #include <iomanip>
 using namespace std;
 
+/**
+ * @brief Перечисление способов заполнения массива
+ */
 enum filling_method { random = 1, manual };
 
+/**
+ * @brief Заполняет массив случайными числами в диапазоне [10, 99]
+ * @param mass - указатель на массив
+ * @param n - количество строк
+ * @param m - количество столбцов
+ */
 void random_massive(int** mass, const size_t n, const size_t m);
+
+/**
+ * @brief Заполняет массив числами, введёнными пользователем
+ * @param mass - указатель на массив
+ * @param n - количество строк
+ * @param m - количество столбцов
+ */
 void manual_massive(int** mass, const size_t n, const size_t m);
+
+/**
+ * @brief Выводит элементы массива на экран
+ * @param mass - указатель на массив
+ * @param n - количество строк
+ * @param m - количество столбцов
+ */
 void print_massive(const int* const* mass, const size_t n, const size_t m);
+
+/**
+ * @brief Находит первый нечётный элемент в каждой строке и заменяет его на 0
+ * @param mass - указатель на массив
+ * @param n - количество строк
+ * @param m - количество столбцов
+ */
 void replacement(int** mass, const size_t n, const size_t m);
+
+/**
+ * @brief Вставляет столбец после первого столбца, содержащего 0
+ * @param mass - ссылка на указатель на массив (для изменения размера)
+ * @param n - количество строк
+ * @param m - ссылка на количество столбцов (изменяется при вставке)
+ * @note Если нулевых элементов нет, массив не изменяется
+ */
 void insertion(int**& mass, const size_t n, size_t& m);
 
+/**
+ * @brief Проверяет корректность введённого значения
+ * @param input - ссылка на введённое значение для проверки
+ * @note Завершает программу при вводе неположительного числа
+ */
+void input_check(int& input);
 
 int main()
 {
     setlocale(LC_ALL, "RU");
-    size_t n, m;
+    size_t n=0, m=0;
     int input;
     cout << "Введите количество строк: ";
-    cin >> n;
+    void input_check(int& input);
+    n = input;
     cout << "Введите количество столбцов: ";
-    cin >> m;
+    void input_check(int& input);
+    m = input;
+    
     // создание динамического массива
     int** matrix = new int* [n];
     for (size_t i = 0; i < n; i++) {
         matrix[i] = new int[m];
     }
     // выбор способа заполнения
-    cout << "1-Случайная генерация чисел\n2-Ручной ввод чисел\n";
+    cout << random<<"-Случайная генерация чисел\n"<<manual<<" - Ручной ввод чисел\n";
     cin >> input;
 
     // заполнение массива в зависимости от выбора
@@ -53,9 +100,16 @@ int main()
     // Освобождение памяти в конце
     for (size_t i = 0; i < n; i++) delete[] matrix[i];
     delete[] matrix;
+    return 0;
 }
 
 
+/**
+ * @brief Заполняет массив случайными числами в диапазоне [10, 99]
+ * @param mass - указатель на массив
+ * @param n - количество строк
+ * @param m - количество столбцов
+ */
 void random_massive(int** mass, const size_t n, const size_t m) {
     if (mass == nullptr) //проверка, что не пустой указатель
         return;
@@ -67,6 +121,12 @@ void random_massive(int** mass, const size_t n, const size_t m) {
 }
 
 
+/**
+ * @brief Заполняет массив числами, введёнными пользователем
+ * @param mass - указатель на массив
+ * @param n - количество строк
+ * @param m - количество столбцов
+ */
 void manual_massive(int** mass, const size_t n, const size_t m) {
     if (mass == nullptr)//проверка, что не пустой указатель
         return;
@@ -77,6 +137,13 @@ void manual_massive(int** mass, const size_t n, const size_t m) {
         }
     }
 }
+
+/**
+ * @brief Выводит элементы массива на экран
+ * @param mass - указатель на массив
+ * @param n - количество строк
+ * @param m - количество столбцов
+ */
 void print_massive(const int* const* mass, const size_t n, const size_t m)
 {
     if (mass == nullptr)//проверка, что не пустой указатель
@@ -90,6 +157,12 @@ void print_massive(const int* const* mass, const size_t n, const size_t m)
     cout << endl;
 }
 
+/**
+ * @brief Находит первый нечётный элемент в каждой строке и заменяет его на 0
+ * @param mass - указатель на массив
+ * @param n - количество строк
+ * @param m - количество столбцов
+ */
 void replacement(int** mass, const size_t n, const size_t m)
 {
     if (mass == nullptr)//проверка, что не пустой указатель
@@ -104,6 +177,13 @@ void replacement(int** mass, const size_t n, const size_t m)
     }
 }
 
+/**
+ * @brief Вставляет столбец после первого столбца, содержащего 0
+ * @param mass - ссылка на указатель на массив (для изменения размера)
+ * @param n - количество строк
+ * @param m - ссылка на количество столбцов (изменяется при вставке)
+ * @note Если нулевых элементов нет, массив не изменяется
+ */
 void insertion(int**& mass, const size_t n, size_t& m)
 {
     if (mass == nullptr)//проверка, что не пустой указатель
@@ -136,4 +216,17 @@ void insertion(int**& mass, const size_t n, size_t& m)
     delete[]mass;
     mass = result_matrix;
     m++;
+}
+
+/**
+ * @brief Проверяет корректность введённого значения
+ * @param input - ссылка на введённое значение для проверки
+ * @note Завершает программу при вводе неположительного числа
+ */
+void input_check(int& input) {
+    cin >> input;
+    if (input <= 0) { //количество строк или столбцов не может быть отрицательным или равным нулю
+        cout << "Ошибка ввода";
+        exit(1);
+    }
 }
