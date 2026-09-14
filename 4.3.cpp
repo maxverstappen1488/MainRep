@@ -53,27 +53,30 @@ void insertion(int**& mass, const size_t n, size_t& m);
  * @param input - ссылка на введённое значение для проверки
  * @note Завершает программу при вводе неположительного числа
  */
-void input_check(int& input);
+void input_check(size_t& result);
 
+/**
+@brief Главная функция программы, реализующая создание, обработку и вывод динамического массива
+@return int - код завершения программы (0 при успешном выполнении)
+@note Завершает программу при вводе неположительного размера массива или некорректного способа его заполнения
+*/
 int main()
 {
     setlocale(LC_ALL, "RU");
-    size_t n=0, m=0;
+    size_t n = 0, m = 0;
     int input;
     cout << "Введите количество строк: ";
-    void input_check(int& input);
-    n = input;
+    input_check(n);
     cout << "Введите количество столбцов: ";
-    void input_check(int& input);
-    m = input;
-    
+    input_check(m);
+
     // создание динамического массива
     int** matrix = new int* [n];
     for (size_t i = 0; i < n; i++) {
         matrix[i] = new int[m];
     }
     // выбор способа заполнения
-    cout << random<<"-Случайная генерация чисел\n"<<manual<<" - Ручной ввод чисел\n";
+    cout << random << "-Случайная генерация чисел\n" << manual << " - Ручной ввод чисел\n";
     cin >> input;
 
     // заполнение массива в зависимости от выбора
@@ -223,10 +226,12 @@ void insertion(int**& mass, const size_t n, size_t& m)
  * @param input - ссылка на введённое значение для проверки
  * @note Завершает программу при вводе неположительного числа
  */
-void input_check(int& input) {
+void input_check(size_t& result) {
+    int input;
     cin >> input;
     if (input <= 0) { //количество строк или столбцов не может быть отрицательным или равным нулю
         cout << "Ошибка ввода";
         exit(1);
     }
+    result=input;
 }
