@@ -5,38 +5,12 @@
 using namespace std;
 
 /**
- * @brief - вычисляет факториал числа итеративным способом
- * @param x - неотрицательное целое число
- * @return - факториал числа (x!)
- *
- * @details Реализация через цикл: перемножает числа от x до 2.
- * Для x=0 и x=1 возвращает 1.
- */
-size_t fact(const int x);
-
-/**
- * @brief - вычисляет сумму ряда для sh(x) с заданной точностью eps
- * @param x - значение аргумента
- * @param eps - точность вычисления (порог остановки)
- * @return - приближённое значение суммы ряда
- *
- * @details Использует рекурсивную вспомогательную функцию sumf_recursed().
- */
-double sumf(const double x, const double eps);
-
-/**
- * @brief - рекурсивная функция для вычисления суммы ряда
+ * @brief Вычисляет сумму ряда для sh(x) с заданной точностью eps через рекуррентное соотношение (итеративный подход)
  * @param x - значение аргумента
  * @param eps - точность вычисления
- * @param n - текущий индекс члена ряда (начинается с 0)
- * @param prev_term - значение предыдущего члена ряда (для рекуррентной формулы)
- * @return - сумма текущего и последующих членов ряда
- *
- * @details Использует рекуррентную формулу для перехода между членами:
- * term_n = term_n-1 · x^2 / ((2n)·(2n+1))
- * Рекурсия останавливается, когда абсолютное значение члена становится меньше eps.
+ * @return приближенное значение суммы ряда
  */
-double sumf_recursed(const double x, const double eps, const int n, const double prev_term);
+double calculate_sh(const double x, const double eps);
 
 /**
  * @brief - точка входа в программу
@@ -51,6 +25,7 @@ double sumf_recursed(const double x, const double eps, const int n, const double
  */
 int main()
 {
+    setlocale(LC_ALL, "RU");
     // параметры табулирования
     double eps;
     cout << "Введите точность: ";
@@ -82,18 +57,9 @@ int main()
     for (double x = a; x <= b + h / 2; x += h) { // +h/2 учёт погрешности double
 
         double exact_val = sinh(x);       // Точное значение (встроенная функция)
-        double approx_val = sumf(x, eps); // Наше рассчитываемое значение (ряд)
-
-        double current_eps = eps;
-
-        // Гарантируем, что разность строго меньше заданной точности eps
-        while (fabs(exact_val - approx_val) >= eps) {
-            current_eps /= 10.0; // Ужесточаем внутренний порог для ряда
-            approx_val = sumf(x, current_eps); // Пересчитываем ряд
-        }
-
-        double diff = fabs(exact_val - approx_val); // Фактическая погрешность
-
+        double approx_val = calculate_sh(x, eps); // Значение по ряду с помощью рекуррентного соотношения
+        double diff = fabs(exact_val - approx_val); // Погрешность
+       
         // Вывод строки таблицы
         cout << "|" << setw(13) << x << "|"
             << setw(13) << exact_val << "|"
@@ -106,48 +72,17 @@ int main()
     return 0;
 }
 
-/**
- * @brief - вычисляет факториал числа итеративным способом
- * @param x - неотрицательное целое число
- * @return - факториал числа (x!)
- */
-size_t fact(const int x) {
-    size_t result = 1;
-    for (size_t i = x; i >= 2; i--) {
-        result *= i;
+double calculate_sh(const double x, const double eps) {
+    double sum = 0.0;
+    double current = x; // Первый член ряда при n = 0 (x^1 / 1!)
+    int n = 0;
+
+    // Суммируем, пока модуль текущего члена больше или равен точности
+    while (fabs(current) >= eps) {
+        sum += current;
+        n++;
+        // Рекуррентный переход: a_n = a_{n-1} * x^2 / ((2n) * (2n + 1))
+        current = current * x * x / ((2.0 * n) * (2.0 * n + 1.0));
     }
-    return result;
-}
-/**
- * @brief - рекурсивная функция для вычисления суммы ряда
- * @param x - значение аргумента
- * @param eps - точность вычисления
- * @param n - текущий индекс члена ряда
- * @param prev_term - значение предыдущего члена ряда
- * @return - сумма текущего и последующих членов ряда
- */
-double sumf_recursed(const double x, const double eps, const int n, const double prev_term) {
-    // Рекуррентная формула: 
-    // termₙ = termₙ₋₁ * x² / ((2n)*(2n+1))
-    // Для n=0 первый член равен x
-    double term = (n == 0) ? x : prev_term * x * x / ((2 * n) * (2 * n + 1));
-
-    // Базовый случай рекурсии: если член меньше eps, дальнейшее суммирование не нужно
-    if (fabs(term) < eps) {
-        return 0;
-    }
-
-    // Рекурсивный шаг: текущий член + сумма остальных
-    return term + sumf_recursed(x, eps, n + 1, term);
-}
-
-/**
- * @brief - вычисляет сумму ряда Тейлора для sh(x) с заданной точностью eps
- * @param x - значение аргумента
- * @param eps - точность вычисления
- * @return - приближённое значение суммы ряда
- */
-double sumf(const double x, const double eps) {
-    // Запуск рекурсии с начальными параметрами: n=0, prev_term=0
-    return sumf_recursed(x, eps, 0, 0);
+    return sum;
 }
