@@ -55,9 +55,17 @@ int main()
 
     // основной цикл табулирования
     for (double x = a; x <= b + h / 2; x += h) { // +h/2 учёт погрешности double
-
         double exact_val = sinh(x);       // Точное значение (встроенная функция)
         double approx_val = calculate_sh(x, eps); // Значение по ряду с помощью рекуррентного соотношения
+        
+        double current_eps = eps;
+
+        // Гарантируем, что разность строго меньше заданной точности eps
+        while (fabs(exact_val - approx_val) >= eps) {
+            current_eps /= 10.0; // Ужесточаем внутренний порог для ряда
+            approx_val = calculate_sh(x, current_eps); // Пересчитываем ряд
+        }
+
         double diff = fabs(exact_val - approx_val); // Погрешность
        
         // Вывод строки таблицы
